@@ -91,7 +91,14 @@ namespace Osu_Music
 
         void CopySongs()
         {
-            Thread newThread = new Thread(search);
+            Parallel.ForEach(Singleton.FilePaths, new ParallelOptions { MaxDegreeOfParallelism = 4 },
+                msg =>
+                {
+                    search();
+                });
+
+
+            /*Thread newThread = new Thread(search);
             newThread.IsBackground = true;
             newThread.Start();
             Thread newThread2 = new Thread(search);
@@ -121,7 +128,7 @@ namespace Osu_Music
                 Thread copyThread = new Thread(CopySongs);
                 copyThread.IsBackground = true;
                 copyThread.Start();
-            }
+            }*/
         }
 
         void search()

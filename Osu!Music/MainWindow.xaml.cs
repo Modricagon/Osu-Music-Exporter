@@ -80,10 +80,17 @@ namespace Osu_Music
             Singleton.Selection = AlbumCombo.SelectedIndex;
             Singleton.beatmapCount = System.IO.Directory.GetDirectories(DirectoryLbl.Text).Length;
             Singleton.originalBeatmapCount = Singleton.beatmapCount;
-            //GoBtn.Content = Convert.ToString(Singleton.beatmapCount) + " beatmaps";
+            try
+            {
+                Singleton.FilePaths.AddRange(System.IO.Directory.GetDirectories(DirectoryLbl.Text));
+            }
+            catch
+            {
+                ErrorLog("Invalid Directory: " + DirectoryLbl.Text);
+                return;
+            }
             System.Windows.MessageBox.Show(string.Format("*FOR BEST RESULTS MAKE SURE THE FOLDER IS EMPTY EVERY TIME YOU START*\r\n\r\n{0} beatmaps to process... approximate time to complete is {1} minutes. (This is extremely approximate)", Singleton.originalBeatmapCount, (Singleton.originalBeatmapCount * 1.5) / 1000));
             Singleton.OutputDirectory = OutputDirectoryLbl.Text;
-            Singleton.FilePaths.AddRange(System.IO.Directory.GetDirectories(DirectoryLbl.Text));
             Thread copyThread = new Thread(CopySongs);
             copyThread.IsBackground = true;
             copyThread.Start();
@@ -91,55 +98,37 @@ namespace Osu_Music
 
         void CopySongs()
         {
-            Parallel.ForEach(Singleton.FilePaths, new ParallelOptions { MaxDegreeOfParallelism = 4 },
-                msg =>
-                {
-                    search();
-                });
-
-
-            /*Thread newThread = new Thread(search);
-            newThread.IsBackground = true;
-            newThread.Start();
-            Thread newThread2 = new Thread(search);
-            newThread2.IsBackground = true;
-            newThread2.Start();
-            Thread newThread3 = new Thread(search);
-            newThread3.IsBackground = true;
-            newThread3.Start();
-            Thread newThread4 = new Thread(search);
-            newThread4.IsBackground = true;
-            newThread4.Start();
-            Thread newThread5 = new Thread(search);
-            newThread5.IsBackground = true;
-            newThread5.Start();
-            Thread newThread6 = new Thread(search);
-            newThread6.IsBackground = true;
-            newThread6.Start();
-            Thread newThread7 = new Thread(search);
-            newThread7.IsBackground = true;
-            newThread7.Start();
-            Thread newThread8 = new Thread(search);
-            newThread8.IsBackground = true;
-            newThread8.Start();
-
-            if (Singleton.threadCount == 0)
+            try
             {
-                Thread copyThread = new Thread(CopySongs);
-                copyThread.IsBackground = true;
-                copyThread.Start();
-            }*/
+                Parallel.ForEach(Singleton.FilePaths, new ParallelOptions {MaxDegreeOfParallelism = 4},
+                    msg =>
+                    {
+                        search();
+                    });
+            }
+            catch
+            {
+                ErrorLog("Error launching threads");
+            }
         }
 
         void search()
         {
-            Singleton.threadCount++;
             List<string> Files = new List<string>();
             char[] mp3 = new char[4] { '.', 'm', 'p', '3' };
-            string path = Singleton.GetPath();
-            if (path == null)
+            string path;
+            try
             {
-                System.Windows.MessageBox.Show("Done!");
+                path = Singleton.GetPath();
+                if (path == null)
+                {
+                    System.Windows.MessageBox.Show("Done!");
+                    return;
+                }
+            }
+            catch
+            {
+                ErrorLog("Invalid path midway?: " + DirectoryLbl.Text);
                 return;
             }
             Files.AddRange(System.IO.Directory.GetFiles(path));
@@ -151,6 +140,10 @@ namespace Osu_Music
             string Version = null;
             IPicture[] Image = new IPicture[1];
 
+            if(Files.Count <= 0)
+            {
+                return;
+            }
             foreach (string SubFilePath in Files)
             {
                 if (System.IO.Path.GetExtension(SubFilePath) == ".osu")
@@ -282,14 +275,14 @@ namespace Osu_Music
                     }
                     catch
                     {
-
+                        ErrorLog("Error saving artwork:" + AudioPath + file.Name);
                     }
                 }
                 file.Save();
             }
             catch
             {
-
+                ErrorLog("Error copying file:" + path);
             }
             Singleton.beatmapCount--;
             Singleton.threadCount--;
@@ -317,6 +310,12 @@ namespace Osu_Music
         private void SupportBtn_Click(object sender, RoutedEventArgs e)
         {
             System.Windows.MessageBox.Show("Any support in any way is greatly appreciated! (Even just a nice message on reddit or the like :P)\r\n\r\nThank you for reading!\r\n\r\nReddit: Modricagon");
+        }
+
+        private void ErrorLog(string message)
+        {
+            string path = System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.StartupPath) + "\\log" + System.DateTime.Now.Minute + System.DateTime.Now.Millisecond + ".txt";
+            System.IO.File.WriteAllText(path, "Error " + message);
         }
     }
 }

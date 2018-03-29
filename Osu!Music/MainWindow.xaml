@@ -1,0 +1,39 @@
+﻿<Window x:Class="Osu_Music.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Osu_Music"
+        mc:Ignorable="d"
+        Title="osu! Music Exporter" Height="214.51" Width="480.808" IsManipulationEnabled="True" ResizeMode="CanMinimize" Icon="osu_music_logo_XJK_icon.ico">
+    <Grid IsManipulationEnabled="True">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="7*"/>
+            <RowDefinition Height="62*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="206*"/>
+            <ColumnDefinition Width="11*"/>
+            <ColumnDefinition Width="256*"/>
+        </Grid.ColumnDefinitions>
+
+        <Image x:Name="image1" HorizontalAlignment="Left" Height="184" VerticalAlignment="Top" Width="473" Source="2017-Summer-C.bmp" Stretch="UniformToFill" RenderTransformOrigin="0.501,0.553" Grid.ColumnSpan="3" Grid.RowSpan="2"/>
+
+        <Image x:Name="image" HorizontalAlignment="Left" Height="111" VerticalAlignment="Top" Width="114" Source="Osu!Music Logo.png" Grid.RowSpan="2"/>
+
+        <Button x:Name="GoBtn" Content="Start!" HorizontalAlignment="Left" Margin="10,95.333,0,0" VerticalAlignment="Top" Width="383" Height="53" Click="GoBtn_Click" FontSize="32" BorderBrush="White" BorderThickness="4" Foreground="Black" Grid.ColumnSpan="3" Grid.Row="1"/>
+        <TextBox x:Name="DirectoryLbl" HorizontalAlignment="Left" Height="20" Margin="114,0.333,0,0" Text="Osu Songs Directory" VerticalAlignment="Top" Width="288" ToolTip="Displays the directory which you selected." IsReadOnly="True" Grid.ColumnSpan="3" Grid.Row="1"/>
+        <Button x:Name="BrowseDirectoryBtn" Content="Browse" HorizontalAlignment="Left" Margin="190,0.333,0,0" VerticalAlignment="Top" Width="50" Click="BrowseDirectoryBtn_Click" ToolTip="Click to select Osu! root directory." Grid.Column="2" Grid.Row="1"/>
+        <TextBox x:Name="OutputDirectoryLbl" HorizontalAlignment="Left" Height="20" Margin="114,25.333,0,0" Text="Output Directory" VerticalAlignment="Top" Width="288" ToolTip="Displays the directory which you selected." IsReadOnly="True" Grid.ColumnSpan="3" Grid.Row="1"/>
+        <Button x:Name="BrowseOutputBtn" Content="Browse" HorizontalAlignment="Left" Margin="190,24.333,0,0" VerticalAlignment="Top" Width="50" Click="BrowseOutputBtn_Click" ToolTip="Click to select output directory." Grid.Column="2" Grid.Row="1"/>
+        <CheckBox x:Name="ArtworkCheck" Content="Artwork" HorizontalAlignment="Left" Margin="119,65.333,0,0" VerticalAlignment="Top" IsChecked="True" FontSize="16" Grid.Row="1"/>
+        <ComboBox x:Name="AlbumCombo" HorizontalAlignment="Left" Margin="63,64.333,0,0" VerticalAlignment="Top" Width="177" Height="26" SelectedIndex="0" Grid.Column="2" Grid.Row="1">
+            <ComboBoxItem Content="*RECOMMENDED* Into Single Albums (Individual Song Artwork will be shown)"/>
+            <ComboBoxItem Content="*RECOMMENDED IF YOU HAVE OTHER MUSIC* Into One Album (Osu!Music Logo for Artwork)"/>
+            <ComboBoxItem Content="*SUCCESS VARIES BY APP* *BEST OPTION IF IT WORKS* Into One Album (Individual Song Artwork Included (Some music players may have difficulty showing the seperate song album artwork. Google Play Music is an example...)"/>
+        </ComboBox>
+        <Label x:Name="GroupLbl" Content="Metadata:" HorizontalAlignment="Left" Margin="200,59.333,0,0" VerticalAlignment="Top" FontSize="16" Grid.ColumnSpan="3" Grid.Row="1"/>
+        <Button x:Name="SupportBtn" Content="Support" HorizontalAlignment="Left" Margin="181,95.333,0,0" VerticalAlignment="Top" Width="59" Height="53" FontSize="13.333" BorderBrush="White" BorderThickness="4" Click="SupportBtn_Click" Grid.Column="2" Grid.Row="1"/>
+
+    </Grid>
+</Window>
